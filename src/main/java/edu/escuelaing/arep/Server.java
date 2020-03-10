@@ -19,12 +19,10 @@ import java.net.*;
 public class Server {
 
 	private static Map<String,Method> webMethods = new HashMap();
-	private static int port;
+	private static int port = getPort();
 	private static ServerSocket serverSocket;
-	private static PrintWriter out;
-	private static BufferedReader in;
-	private static BufferedOutputStream outputLine;
-	private static Socket clientSocket;
+	private static ExecutorService executor;
+	private final static int nThreads = 15;
 	
 	/**
 	 * Inicia el servicio del server, cargando todas las clases que posean
@@ -58,7 +56,6 @@ public class Server {
 			 if (directory.exists()) {
 				 for (String file : directory.list()) {
 	                    if (file.endsWith(".class")) {
-	                    	System.out.println(webMethods.size()+" fsfnsiunsongsi");
 	                        String fileClass = file.substring(0, file.indexOf("."));
 	                        System.out.println(pathP + "." + fileClass + "      ------------");
 	                        addMethodswithWeb(pathP + "." + fileClass);
@@ -75,30 +72,22 @@ public class Server {
 	 * estaticas(serverhttp) y dinamicas(annotacion web)
 	 */
 	public static void listen()  {
-		ExecutorService executor = Executors.newFixedThreadPool(15);
 		
-			int port = getPort();
-			try { 
-			      serverSocket = new ServerSocket(port);
-			   } catch (IOException e) {
-			      System.err.println("Could not listen on port: " + port);
-			      System.exit(1);
-			   }
+		try { 
+		      serverSocket = new ServerSocket(port);
+		      executor = Executors.newFixedThreadPool(nThreads);
+		   } catch (IOException e) {
+		      System.err.println("Could not listen on port: " + port);
+		   }
+		
 		while (true) {
-			try {
-			       System.out.println("Listo para recibir ...");
-			       clientSocket = serverSocket.accept();
-			       Thread thread = new Thread(new HttpServer(clientSocket,webMethods));
-	                executor.execute(thread);
-	                
-			   } catch (IOException e) {
-			       System.err.println("Accept failed.");
-			       System.exit(1);
-			   }
 			
-			
-	    	
-			
+			System.out.println("Listo para recibir ...");
+			   //clientSocket = serverSocket.accept();
+			   //System.out.println(clientSocket);
+			   HttpServer thread = (new HttpServer(serverSocket,webMethods));
+			   thread.run();
+			   //executor.execute(new HttpServer(serverSocket,webMethods));
 			
 			
 		}
@@ -115,8 +104,7 @@ public class Server {
 			Method[] methods = c.getMethods();
 			for (Method m : methods) {
 				if(m.isAnnotationPresent(Web.class)) {
-					System.out.println("Ejecutando Metodo " + m.getName());
-					System.out.println("En clase " + c.getName());
+					System.out.println("Cargando metodos con annotacion web");
 					webMethods.put("/"+m.getAnnotation(Web.class).value(),m);
 					System.out.println(m.getAnnotation(Web.class).value());
 				}

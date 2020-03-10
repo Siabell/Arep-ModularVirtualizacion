@@ -20,33 +20,38 @@ public class HttpServer implements Runnable{
 	static final String FILE_NOT_FOUND = "404.html";
     static final String METHOD_NOT_SUPPORTED = "notSupported.html";
     private static Map<String,Method> webMethods = new HashMap();
-	private static int port;
-	private static ServerSocket serverSocket;
 	private static PrintWriter out;
 	private static BufferedReader in;
 	private static BufferedOutputStream outputLine;
 	private static Socket clientSocket;
 
-	public HttpServer(Socket clientSocket, Map<String, Method> webMethods) {
-        this.clientSocket = clientSocket;
+	public HttpServer(ServerSocket serverSocket, Map<String, Method> webMethods) {
+		out = null;
+		in = null;
+		outputLine = null;
+        try {
+			this.clientSocket = serverSocket.accept();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         System.out.println("Connection accepted.");
         this.webMethods = webMethods;
     }
 	
+	@Override
 	public void run() {
 		
 		try {
 			out = new PrintWriter(clientSocket.getOutputStream(), true);
-			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			this.in = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
 			outputLine = new BufferedOutputStream(clientSocket.getOutputStream());
-			String inputLine;
-			int first = 0;
+			 String inputLine = this.in.readLine();
 			String[] header = null;
-			System.out.println();
-			inputLine = in.readLine();
-			while ((inputLine) != null) {
-				
-	    		if (first == 0) {
+			System.out.println(clientSocket.getInputStream());
+			int first=0;
+			while (inputLine != null) {
+				if (first ==0) {
+					System.out.println(inputLine);
 	    			header = inputLine.split(" ");
 	    			String fileReq = header[1];
 	    			System.out.println("el archivo es "+fileReq);
@@ -54,29 +59,49 @@ public class HttpServer implements Runnable{
 	    				sendResponse(out,null,"text/html",outputLine,"200 ok");
 	    				String answer = invokeMethods(webMethods.get(fileReq));
 	    				out.write(answer + "\r\n");
-                        out.flush();
+	                    out.flush();
 	    			}else {
 	    				requestOption(header);
 	    			}
-	    			if (!in.ready()) {
-                        break;
-                    }
-	    			first ++;
-	    		}
-	    		
+				}
+				 //System.out.println("Received: " + inputLine);
+                if (!this.in.ready()) {
+                    break;
+                }
+                inputLine = this.in.readLine();
+                first++;
+				
+    			
 			}
 			
-			//Thread.sleep(100);
+			//Thread.sleep(1000);
 			out.close();
 			in.close(); 
-			clientSocket.close(); 
 			outputLine.close();
+			clientSocket.close(); 
+			
+			System.out.println("finalizo ------------------");
 			this.finalize();
-			
-			
+		} catch (SocketTimeoutException exception) {
+	            // Output expected SocketTimeoutExceptions.
+	            System.out.println("saleeeeeeeeeee------eeeee1");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			try {
+				this.finalize();
+			} catch (Throwable e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			System.out.println("saleeeeeeeeeee------eeeee2");
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			System.out.println("saleeeeeeeeeee------eeeee3");
+		}
+		try {
+			this.finalize();
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -155,7 +180,7 @@ public class HttpServer implements Runnable{
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 		
