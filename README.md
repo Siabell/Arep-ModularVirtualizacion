@@ -1,9 +1,10 @@
-# Arep-WebFramework
+# Arep-ModularVirtualizacion
 
 
-This application implements a framework created with java that contains a web server that supports multiple consecutive requests and returns the requested files including html pages and images.The framework that allows a developer to create responds to requests through annotations about the methods created by the developer.
+This application implements a framework created with java that contains a web server that supports multiple consecutive requests and returns the requested files including html pages and images using threads.The framework that allows a developer to create responds to requests through annotations about the methods created by the developer.
 
-[![CircleCI](https://circleci.com/gh/Siabell/Arep-WebFramework/tree/circleci-project-setup.svg?style=svg)](https://circleci.com/gh/Siabell/Arep-WebFramework/tree/circleci-project-setup)
+[![CircleCI](https://circleci.com/gh/Siabell/Arep-ModularVirtualClient/tree/circleci-project-setup.svg?style=svg)](https://circleci.com/gh/Siabell/Arep-ModularVirtualClient/tree/circleci-project-setup)
+
 ## Getting Started
 
  In order to use this project, first clone this repository or download the project.
@@ -58,7 +59,7 @@ You will need maven java installed on your machine to employ this program
 
 ## Deployment
 
-[Web server App heroku](https://webframeworkarep.herokuapp.com/) - heroku deploy
+[Web server App heroku](https://webintroawsarep.herokuapp.com/) - heroku deploy
 
 * main page
 ![jpg](src/main/resources/images/index.PNG)
