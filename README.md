@@ -3,7 +3,7 @@
 
 This application implements a framework created with java that contains a web server that supports multiple consecutive requests and returns the requested files including html pages and images using threads.The framework that allows a developer to create responds to requests through annotations about the methods created by the developer.
 
-[![CircleCI](https://circleci.com/gh/Siabell/Arep-ModularVirtualClient/tree/circleci-project-setup.svg?style=svg)](https://circleci.com/gh/Siabell/Arep-ModularVirtualClient/tree/circleci-project-setup)
+[![CircleCI](https://circleci.com/gh/Siabell/Arep-ModularVirtualizacion/tree/circleci-project-setup.svg?style=svg)](https://circleci.com/gh/Siabell/Arep-ModularVirtualizacion/tree/circleci-project-setup)
 
 ## Getting Started
 
