@@ -80,6 +80,9 @@ You will need maven java installed on your machine to employ this program
 * [Heroku](https://www.heroku.com/) - Deploy Enviroment
 * [Java](https://www.java.com/es/download/) - Programming language
 
+### Arquitecture Model
+
+![image.png](images/model.PNG)
 
 ## Authors
 
